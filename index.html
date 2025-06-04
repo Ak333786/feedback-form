@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Rate Your Experience</title>
+  <meta charset="UTF-8">
+  <title>Leave Us a Review</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9fbfd;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 40px;
-      color: #333;
-    }
-    img.logo {
-      max-width: 150px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      color: #2c3e50;
+      padding: 30px;
     }
     .stars {
-      display: inline-block;
       direction: rtl;
+      display: inline-block;
     }
     .stars input {
       display: none;
@@ -33,91 +24,88 @@
     .stars input:checked ~ label,
     .stars label:hover,
     .stars label:hover ~ label {
-      color: #f39c12;
+      color: gold;
     }
     #feedbackForm {
-      margin-top: 30px;
       display: none;
+      margin-top: 20px;
     }
     textarea {
-      width: 300px;
+      width: 80%;
       height: 100px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      margin-top: 10px;
     }
     button {
       margin-top: 15px;
-      padding: 10px 25px;
+      padding: 10px 20px;
       font-size: 16px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #218838;
+    img {
+      width: 200px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
+  <img src="https://www.bouncycastlefactory.co.uk/theme/logo2@2x.png" alt="Logo" />
 
-  <img src="https://www.bouncycastlefactory.co.uk/theme/logo2@2x.png" alt="Your Logo" class="logo" /> <!-- Replace with your logo URL -->
-
-  <h2>How would you rate your experience with us?</h2>
-
+  <h2>How was your experience?</h2>
+  
   <div class="stars">
-    <input type="radio" name="star" id="star5" value="5"><label for="star5">&#9733;</label>
-    <input type="radio" name="star" id="star4" value="4"><label for="star4">&#9733;</label>
-    <input type="radio" name="star" id="star3" value="3"><label for="star3">&#9733;</label>
-    <input type="radio" name="star" id="star2" value="2"><label for="star2">&#9733;</label>
-    <input type="radio" name="star" id="star1" value="1"><label for="star1">&#9733;</label>
+    <input type="radio" id="star5" name="star" value="5"><label for="star5">★</label>
+    <input type="radio" id="star4" name="star" value="4"><label for="star4">★</label>
+    <input type="radio" id="star3" name="star" value="3"><label for="star3">★</label>
+    <input type="radio" id="star2" name="star" value="2"><label for="star2">★</label>
+    <input type="radio" id="star1" name="star" value="1"><label for="star1">★</label>
   </div>
 
   <div id="feedbackForm">
-    <h3>We're always improving. Let us know how we can do better.</h3>
+    <h3>Please tell us what we can improve:</h3>
     <textarea id="feedback" placeholder="Your feedback..."></textarea><br>
-    <button onclick="submitFeedback()">Submit Feedback</button>
+    <button onclick="submitFeedback()">Submit</button>
   </div>
 
   <script>
-  const stars = document.querySelectorAll('input[name="star"]');
-  stars.forEach(star => {
-    star.addEventListener('change', () => {
-      const rating = parseInt(star.value);
-      if (rating === 5) {
-        window.location.href = "https://g.co/kgs/ijTdcv";
-      } else {
-        document.getElementById('feedbackForm').style.display = 'block';
-      }
+    const stars = document.querySelectorAll('input[name="star"]');
+    stars.forEach(star => {
+      star.addEventListener('change', () => {
+        const rating = parseInt(star.value);
+        if (rating === 5) {
+          // Redirect 5-star reviews to Google
+          window.location.href = "https://g.co/kgs/ijTdcv";
+        } else {
+          document.getElementById('feedbackForm').style.display = 'block';
+        }
+      });
     });
-  });
 
-  function submitFeedback() {
-    const feedback = document.getElementById('feedback').value;
-    const rating = document.querySelector('input[name="star"]:checked').value;
+    function submitFeedback() {
+      const rating = document.querySelector('input[name="star"]:checked').value;
+      const feedback = document.getElementById('feedback').value;
 
-    const formData = new FormData();
-    formData.append('rating', rating);
-    formData.append('feedback', feedback);
+      const formData = new FormData();
+      formData.append('rating', rating);
+      formData.append('feedback', feedback);
 
-    fetch("https://script.google.com/macros/s/AKfycbwIe3YPyKWN9CD9vDptf3mZ0AnvxCBHw4uuW1XgkaBCY0kQ94SYI4OsqXVV_-pjWV3KiQ/exec", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.text())
-    .then(res => {
-      alert("Thank you! Your feedback has been received.");
-      location.reload();
-    })
-    .catch(err => {
-      alert("Something went wrong. Please try again later.");
-      console.error(err);
-    });
-  }
-</script>
-
+      fetch("https://script.google.com/macros/s/AKfycbzAT3QycE5UKYAANL3g8HBy4eOQvSRY-jRkebppFGGk_q64UR87vWC6HJNs3ZoLozLsLw/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === "success") {
+          alert("Thank you for your feedback!");
+          location.reload();
+        } else {
+          alert("Something went wrong: " + res.message);
+        }
+      })
+      .catch(err => {
+        alert("Error submitting feedback.");
+        console.error(err);
+      });
+    }
+  </script>
 </body>
 </html>
