@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rate Your Experience</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9fbfd;
+      text-align: center;
+      padding: 40px;
+      color: #333;
+    }
+    img.logo {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .stars {
+      display: inline-block;
+      direction: rtl;
+    }
+    .stars input {
+      display: none;
+    }
+    .stars label {
+      font-size: 40px;
+      color: #ccc;
+      cursor: pointer;
+    }
+    .stars input:checked ~ label,
+    .stars label:hover,
+    .stars label:hover ~ label {
+      color: #f39c12;
+    }
+    #feedbackForm {
+      margin-top: 30px;
+      display: none;
+    }
+    textarea {
+      width: 300px;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="https://www.bouncycastlefactory.co.uk/theme/logo2@2x.png" alt="Your Logo" class="logo" /> <!-- Replace with your logo URL -->
+
+  <h2>How would you rate your experience with us?</h2>
+
+  <div class="stars">
+    <input type="radio" name="star" id="star5" value="5"><label for="star5">&#9733;</label>
+    <input type="radio" name="star" id="star4" value="4"><label for="star4">&#9733;</label>
+    <input type="radio" name="star" id="star3" value="3"><label for="star3">&#9733;</label>
+    <input type="radio" name="star" id="star2" value="2"><label for="star2">&#9733;</label>
+    <input type="radio" name="star" id="star1" value="1"><label for="star1">&#9733;</label>
+  </div>
+
+  <div id="feedbackForm">
+    <h3>We're always improving. Let us know how we can do better.</h3>
+    <textarea id="feedback" placeholder="Your feedback..."></textarea><br>
+    <button onclick="submitFeedback()">Submit Feedback</button>
+  </div>
+
+  <script>
+    const stars = document.querySelectorAll('input[name="star"]');
+    stars.forEach(star => {
+      star.addEventListener('change', () => {
+        const rating = parseInt(star.value);
+        if (rating === 5) {
+          window.location.href = "https://g.co/kgs/ijTdcv";
+        } else {
+          document.getElementById('feedbackForm').style.display = 'block';
+        }
+      });
+    });
+
+    function submitFeedback() {
+      const feedback = document.getElementById('feedback').value;
+      const rating = document.querySelector('input[name="star"]:checked').value;
+
+      fetch("https://script.google.com/macros/s/AKfycbzAT3QycE5UKYAANL3g8HBy4eOQvSRY-jRkebppFGGk_q64UR87vWC6HJNs3ZoLozLsLw/exec", { // 👈 Replace with your Google Apps Script URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          rating: rating,
+          feedback: feedback
+        })
+      })
+      .then(res => {
+        alert("Thank you! Your feedback has been received.");
+        location.reload();
+      })
+      .catch(err => {
+        alert("Something went wrong. Please try again later.");
+        console.error(err);
+      });
+    }
+  </script>
+
+</body>
+</html>
